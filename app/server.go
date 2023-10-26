@@ -21,17 +21,28 @@ func main() {
 	}
 	defer conn.Close()
 
-	buff := make([]byte, 1024)
-	_, err = conn.Read(buff)
+	readBuf := make([]byte, 1024)
+	_, err = conn.Read(readBuf)
 	if err != nil {
 		fmt.Printf("Read error: %s\n", err)
 	}
 
-	request := strings.Split(string(buff), "\r\n")
+	request := strings.Split(string(readBuf), "\r\n")
 	startLine := request[0]
+	target := strings.Fields(startLine)[1]
 
-	if strings.Fields(startLine)[1] == "/" {
+
+	if target == "/" {
 		conn.Write([]byte("HTTP/1.1 200 OK\r\n\r\n"))
+
+	} else if target[0:6] == "/echo/" {
+		random_str := target[6:]
+
+		writeBuf := fmt.Sprintf("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", len(random_str), random_str)
+		fmt.Printf("Request: %v\n", request)
+		fmt.Printf("Response: %v\n", writeBuf)
+		conn.Write([]byte(writeBuf))
+
 	} else {
 		conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 	}
