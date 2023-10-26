@@ -19,5 +19,12 @@ func main() {
 		os.Exit(1)
 	}
 	defer conn.Close()
+
+	buff := make([]byte, 1024)
+	_, err = conn.Read(buff)
+	if err != nil {
+		fmt.Printf("Read error: %s\n", err)
+	}
+
 	conn.Write([]byte("HTTP/1.1 200 OK\r\n\r\n"))
 }
