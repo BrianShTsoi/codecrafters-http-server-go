@@ -41,7 +41,7 @@ func main() {
 		conn.Write([]byte(writeBuf))
 
 	} else if target == "/user-agent" {
-		agent := request[3][12:]
+		agent := request[2][12:]
 
 		writeBuf := fmt.Sprintf("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", len(agent), agent)
 		fmt.Printf("Request: %v\n", request)
