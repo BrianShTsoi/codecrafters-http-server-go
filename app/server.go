@@ -37,8 +37,13 @@ func main() {
 
 	} else if target[0:6] == "/echo/" {
 		random_str := target[6:]
-
 		writeBuf := fmt.Sprintf("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", len(random_str), random_str)
+		conn.Write([]byte(writeBuf))
+
+	} else if target == "/user-agent" {
+		agent := request[3][12:]
+
+		writeBuf := fmt.Sprintf("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s", len(agent), agent)
 		fmt.Printf("Request: %v\n", request)
 		fmt.Printf("Response: %v\n", writeBuf)
 		conn.Write([]byte(writeBuf))
